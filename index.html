@@ -1,6 +1,139 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Yuyu 的藍色海洋｜小丑魚游泳版</title>
+  <style>
+    :root{
+      --ocean-top:#cbe9ff;
+      --ocean-bottom:#eaf8ff;
+      --ink:#033e6b;
+      --blue-1:#0077b6;
+      --blue-2:#004e89;
+      --accent:#00b4d8;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Noto Sans TC",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      color:var(--ink);
+      background:linear-gradient(to bottom,var(--ocean-top) 0%,var(--ocean-bottom) 100%);
+      line-height:1.85;
+      overflow-x:hidden;
+    }
+
+    /* 背景容器（放光影＋小丑魚） */
+    .ocean{
+      position:fixed; inset:0; overflow:hidden;
+      z-index:0; pointer-events:none;
+    }
+    .light{
+      position:absolute; inset:-20%;
+      background:radial-gradient(60% 40% at 50% 30%, rgba(255,255,255,.14), rgba(255,255,255,0) 70%);
+      filter:blur(12px);
+      animation:drift 18s linear infinite;
+    }
+    @keyframes drift{
+      0%{transform:translateX(-10%) translateY(-5%) rotate(0)}
+      50%{transform:translateX(10%) translateY(8%) rotate(8deg)}
+      100%{transform:translateX(-10%) translateY(-5%) rotate(0)}
+    }
+
+    /* 小丑魚（單一主角魚） */
+    .clownfish{
+      position:absolute;
+      width:min(38vw,320px);  /* 會隨螢幕縮放 */
+      aspect-ratio:3/1.6;
+      top: 35vh;             /* 初始高度，可自行調整 10vh~80vh */
+      left:-40vw;            /* 從畫面左外側開始 */
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.12));
+      animation: swimAcross 22s linear infinite, bob 3.2s ease-in-out infinite;
+    }
+    /* 往右游過整個畫面，再從左邊重來 */
+    @keyframes swimAcross{
+      0%   { transform: translateX(0) }
+      100% { transform: translateX(160vw) }
+    }
+    /* 微幅上下擺動 */
+    @keyframes bob{
+      0%,100%{ transform-origin:50% 50%; translate:0 0 }
+      50%    { translate:0 -6px }
+    }
+    /* 讓尾巴輕微擺動（針對 SVG 尾巴 group） */
+    .clownfish .tail{ animation: tailWag .5s ease-in-out infinite }
+    @keyframes tailWag{
+      0%,100%{ transform: rotate(6deg); transform-origin: 32px 30px; }
+      50%    { transform: rotate(-6deg); transform-origin: 32px 30px; }
+    }
+
+    /* 內容區 */
+    .wrap{
+      position:relative; z-index:5;
+      max-width:900px; margin:0 auto; padding:28px 18px 80px;
+    }
+    header{ text-align:center; margin:20px 0 8px }
+    h1{ margin:0 0 10px; color:var(--blue-1); font-size:clamp(22px,4.5vw,34px) }
+    .subtitle{ color:#2d5e89; margin:0 0 18px }
+    .section{ margin-top:28px }
+    .section h2{
+      color:var(--blue-2); font-size:clamp(18px,3.6vw,22px);
+      border-left:6px solid var(--accent); padding-left:10px; margin:18px 0 8px;
+    }
+    p{font-size:1.02rem; margin:10px 0}
+    ul{margin:8px 0 0 22px} li{margin:6px 0}
+    hr{border:none; height:1px; background:linear-gradient(90deg,transparent,#9ed9ff,transparent); margin:22px 0}
+    footer{ text-align:center; color:#5f7992; font-size:.92rem; margin-top:40px }
+  </style>
+</head>
+<body>
+  <!-- 背景：海洋與小丑魚 -->
+  <div class="ocean" aria-hidden="true">
+    <div class="light"></div>
+
+    <!-- 小丑魚 SVG（橘白條紋） -->
+    <svg class="clownfish" viewBox="0 0 180 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- 尾巴（會擺動） -->
+      <g class="tail">
+        <path d="M18 48 L44 30 L44 66 Z" fill="#ff6a00" stroke="#202a44" stroke-width="2"/>
+        <path d="M24 48 L40 36 L40 60 Z" fill="#ffffff" opacity=".9" stroke="#202a44" stroke-width="2"/>
+      </g>
+
+      <!-- 身體 -->
+      <ellipse cx="96" cy="48" rx="62" ry="28" fill="#ff7a00" stroke="#202a44" stroke-width="2"/>
+
+      <!-- 白色條紋（頭、身、中段） -->
+      <path d="M62 22 q10 26 0 52 h-10 q10-26 0-52z" fill="#ffffff" stroke="#202a44" stroke-width="2"/>
+      <path d="M108 20 q14 28 0 56 h-12 q14-28 0-56z" fill="#ffffff" stroke="#202a44" stroke-width="2"/>
+      <path d="M138 24 q10 24 0 48 h-10 q10-24 0-48z" fill="#ffffff" stroke="#202a44" stroke-width="2"/>
+
+      <!-- 背鰭、腹鰭 -->
+      <path d="M88 18 q10 -12 20 0" fill="#ff7a00" stroke="#202a44" stroke-width="2"/>
+      <path d="M84 74 q8 10 24 0" fill="#ff7a00" stroke="#202a44" stroke-width="2"/>
+
+      <!-- 鼻嘴區塊 -->
+      <path d="M150 48 q16 0 20 0 q-6 12 -20 14 q-2 -14 0 -14z" fill="#ff7a00" stroke="#202a44" stroke-width="2"/>
+
+      <!-- 眼睛 -->
+      <circle cx="132" cy="40" r="6" fill="#ffffff" stroke="#202a44" stroke-width="2"/>
+      <circle cx="132" cy="40" r="3" fill="#202a44"/>
+
+      <!-- 亮面高光 -->
+      <ellipse cx="96" cy="38" rx="18" ry="10" fill="#ffffff" opacity=".18"/>
+    </svg>
+  </div>
+
+  <!-- 前景內容（放你的敘述） -->
+  <div class="wrap">
+    <header>
+      <h1>🌊 Yuyu 的藍色海洋</h1>
+      <p class="subtitle">Hello GitHub from iPhone!｜這是我在手機上新增的第一個檔案 🎉</p>
+    </header>
+    <hr/>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yuyu 的申請網頁 ｜ 藍色海洋主題</title>
