@@ -90,4 +90,59 @@
 * 我認為人工智慧對軟體工程師來說整體上是幫助，有了人工智慧的幫助，可以讓我們的想像有更多更多元的發展。也許，人工智慧會取代部分的工作，但卻同時可以更精進軟體工程師的工作。像是多了一個老師、一個同學，跟我們討論我們現階段遇到的困難與關卡。而我們如何藉由這些討論與資源，作更多更新的發展與突破。
 重要的是，我們擁有這些資源，我們如何適當的運用，能夠更有效率，更有創造力的解決問題。
 
+    <footer>
+      <p>© 2025 Yuyu｜藍色海洋主題｜Made with 💙 on iPhone</p>
+    </footer>
+  </div>
+
+  <!-- === 產生多隻小魚的腳本（純前端、無外部檔案） === -->
+  <script>
+    // 在 .ocean 中生成多隻小魚，隨機大小/速度/高度/方向/色相
+    (function(){
+      const ocean = document.querySelector('.ocean');
+      const FISH_COUNT = 12; // 想多一點就調高
+      for(let i=0;i<FISH_COUNT;i++){
+        const fish = document.createElement('div');
+        fish.className = 'fish';
+
+        // 隨機外觀與行為
+        const size = (Math.random()*0.8 + 0.6);             // 0.6 ~ 1.4 倍
+        const depthVH = Math.random()*85 + 5;               // 距離頂部 5vh~90vh
+        const duration = Math.random()*18 + 16;             // 16s ~ 34s
+        const delay = Math.random()*-20;                    // 讓一開始就分散
+        const rightward = Math.random() > 0.5;              // 方向
+        const hue = Math.floor(Math.random()*60) - 10;      // -10 ~ 50 度，偏藍綠
+
+        fish.style.top = depthVH + 'vh';
+        fish.style.animation = (rightward ? 'swim-right' : 'swim-left') + ` ${duration}s linear infinite`;
+        fish.style.animationDelay = `${delay}s`;
+        fish.style.transformOrigin = '50% 50%';
+        fish.style.transform = `scale(${size})`;
+        fish.style.filter = `hue-rotate(${hue}deg) drop-shadow(0 2px 2px rgba(0,0,0,0.12))`;
+
+        // 建立一隻簡單的 SVG 魚：圓身＋三角尾＋眼睛
+        fish.innerHTML = `
+          <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- 身體 -->
+            <ellipse cx="60" cy="30" rx="36" ry="18" fill="#29b6f6"/>
+            <!-- 尾巴 -->
+            <polygon points="12,30 36,16 36,44" fill="#00a8e8"/>
+            <!-- 背鰭 -->
+            <path d="M54 18 Q60 6 66 18" fill="#00b4d8"/>
+            <!-- 眼睛 -->
+            <circle cx="74" cy="26" r="4" fill="#ffffff"/>
+            <circle cx="74" cy="26" r="2" fill="#0a2540"/>
+            <!-- 腮線 -->
+            <path d="M62 22 q -6 8 0 16" stroke="#0a2540" stroke-width="1.5" fill="none" opacity=".45"/>
+            <!-- 亮面 -->
+            <ellipse cx="58" cy="24" rx="10" ry="6" fill="#ffffff" opacity=".18"/>
+          </svg>
+        `;
+
+        ocean.appendChild(fish);
+      }
+    })();
+  </script>
+</body>
+</html>
 
